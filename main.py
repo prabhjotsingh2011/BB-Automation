@@ -1,36 +1,37 @@
 
 from typing import KeysView
 from selenium import webdriver
-# from selenium.webdriver.common.by import By
-import time
 from datetime import date
-import datetime
-import calendar
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 
-# print(time.localtime())
+
+import datetime
+import calendar
+import time
 
 
-##############  stopping program till time  9:40 AM #################################
-######################################################################################
 
-# time_2 = datetime.timedelta(hours= 20, minutes=50)
-# while 1:
-#     currTime={
-#         'hour':time.localtime().tm_hour,
-#         'min':time.localtime().tm_min
-#     }
-#     time_1=datetime.timedelta(hours= currTime['hour'],minutes= currTime['min'])
-#     diff=str(time_2-time_1)
 
-#     if diff=='0:00:00':
-#         break
-#     time.sleep(2)
+#############  stopping program till time  9:40 AM #################################
 
-# #######################################################################################
+time_2 = datetime.timedelta(hours= 9, minutes=40)
+while 1:
+    currTime={
+        'hour':time.localtime().tm_hour,
+        'min':time.localtime().tm_min
+    }
+    time_1=datetime.timedelta(hours= currTime['hour'],minutes= currTime['min'])
+    diff=str(time_2-time_1)
 
+    if diff=='0:00:00':
+        break
+    time.sleep(2)
+
+
+
+
+################ Setting up webDriver ################
 chrome_options = Options()
 chrome_options.add_argument("--use-fake-ui-for-media-stream")
 chrome_options.add_argument('use-fake-device-for-media-stream')
@@ -41,18 +42,16 @@ chrome_browser.maximize_window()
 chrome_browser.get('https://cuchd.blackboard.com/')
 
 
+
 ######### clicking ok button of cookies ################
-#######################################################
 time.sleep(3)
 ok_button = chrome_browser.find_element_by_class_name('button-1')
 # ok_button.implicitly_wait(20000)
 webdriver.ActionChains(chrome_browser).click(ok_button).perform()
 
-###########################################################
 
 
 ################### Login to BB  #############################
-##############################################################
 
 time.sleep(2)
 user_input = chrome_browser.find_element_by_id('user_id')
@@ -64,8 +63,9 @@ user_password.send_keys('Prabhjot@singh1')
 time.sleep(1)
 webdriver.ActionChains(chrome_browser).click(SignIn).perform()
 
-################################################################
 
+
+#####################  Join class Link #############################
 first=1
 def joinClass(first):
     link = chrome_browser.find_element(By.ID, 'sessions-list-dropdown')
@@ -75,25 +75,16 @@ def joinClass(first):
     time.sleep(1)
     joiningLink.click()
     time.sleep(2)
-    # actions = webdriver.ActionChains(chrome_browser)      
-    # actions.key_down(Keys.CONTROL).key_down(Keys.TAB).key_up(Keys.TAB).key_up(Keys.CONTROL).perform()   
-
     allTabs=chrome_browser.window_handles
     chrome_browser.switch_to.window(allTabs[1])
     close1=chrome_browser.find_element(By.CLASS_NAME,'close')
     close1.click()
     time.sleep(2)
     if first==1:
-        print("###################$$############&#&*@*&@*&@*&!*&@*&@*&!*&@*&!*&@*&!!*&")
-        print("###################$$############&#&*@*&@*&@*&!*&@*&@*&!*&@*&!*&@*&!!*&")
-        print("###################$$############&#&*@*&@*&@*&!*&@*&@*&!*&@*&!*&@*&!!*&")
-        print("###################$$############&#&*@*&@*&@*&!*&@*&@*&!*&@*&!*&@*&!!*&")
         close2=chrome_browser.find_element(By.CLASS_NAME,'later-tutorial-button')
         close2.click()
         close3=chrome_browser.find_element(By.ID,   'tutorial-dialog-tutorials-menu-learn-about-tutorials-menu-close')
         close3.click()
-        
-
     time.sleep(5)
     chrome_browser.close()
     chrome_browser.switch_to.window(allTabs[0])
@@ -101,29 +92,20 @@ def joinClass(first):
 
 
 #################### open class Automatic function #########################
-###########################################################################
 def openClass(classCode,first):
     time.sleep(5)
     search_button = chrome_browser.find_element_by_class_name('ng-empty')
     chrome_browser.implicitly_wait(20)
-    # search_button.send_keys('CST-212')
     search_button.send_keys(classCode)
-
     time.sleep(5)
-    # subject = chrome_browser.find_elements_by_class_name('element-card')
-    # webdriver.ActionChains(chrome_browser).click(subject).perform()
-    # testing = chrome_browser.find_element_by_class_name('summary')
     testing = chrome_browser.find_element_by_id('course-columns-current')
     webdriver.ActionChains(chrome_browser).click(testing).perform()
 
-    # here implement the code to join the class link
     joinClass(first)
 
-################################################################################
 
 
-###############  timeTable ####################################################
-##############################################################################
+###############  TimeTable #############################
 
 timeTable = [
     ['CST-211', 'CST-218', 'CST-212', None, 'SMT-236'],
@@ -134,11 +116,9 @@ timeTable = [
     ['UCY-246', 'CSP-212', 'CSP-212', 'None', 'CST-211']
 ]
 
-###############################################################################
 
 
 ##################### getting Todays Day #########################
-###################################################################
 def getTodayDay(x):
     switcher = {
         'Sunday': None,
@@ -156,39 +136,29 @@ my_date = date.today()
 todaysDay = calendar.day_name[my_date.weekday()]
 Day = getTodayDay(todaysDay)
 print(Day)
-####################################3##################################
 
 
+
+#############  close current course content ################3
 def close_course_content():
     closeButton = chrome_browser.find_element(By.CLASS_NAME, "bb-close")
     webdriver.ActionChains(chrome_browser).click(closeButton).perform()
 
-
+    
+###########  Clear Serch Box ##################
 def clear_search_box():
     filled_search_button = chrome_browser.find_element_by_class_name(
         'ng-not-empty')
     filled_search_button.clear()
 
 
-# for i in timeTable[Day]:
-#     if i=='None':
-#         print('###################################  None found  #####################')
-#         time.sleep(20)
-#         continue
-#     openClass(i)
-#     time.sleep(5)
-#     close_course_content()
-#     clear_search_box()
-
-
-
-for i in ['UCX-249','TDT-202']:
+for i in timeTable[Day]:
     if i=='None':
-        print('#############  WooooHoooooo It\'s a break  #####################')
+        print('###################################  None found  #####################')
         time.sleep(20)
         continue
-    openClass(i,first)
-    first=0
+    openClass(i)
+      first=0
     time.sleep(5)
     close_course_content()
     clear_search_box()
